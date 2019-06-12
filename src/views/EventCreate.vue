@@ -1,37 +1,37 @@
 <template>
   <div>
-    <h1>Create an Event, {{ user.name }}</h1>
+    <h1>Create an Event</h1>
     <form @submit.prevent="submitEvent">
       <label>Select a category</label>
       <select v-model="event.category">
         <option v-for="cat in categories" :key="cat">{{ cat }}</option>
       </select>
+
       <h3>Name & describe your event</h3>
-      <div class="field">
-        <label>Title</label>
-        <input
-          v-model="event.title"
-          type="text"
-          placeholder="Add an event title"
-        />
-      </div>
-      <div class="field">
-        <label>Description</label>
-        <input
-          v-model="event.description"
-          type="text"
-          placeholder="Add a description"
-        />
-      </div>
+      <BaseInput
+        class="field"
+        label="Title"
+        v-model="event.title"
+        type="text"
+        placeholder="Title"
+      />
+
+      <BaseInput
+        class="field"
+        label="Description"
+        v-model="event.description"
+        type="text"
+        placeholder="Description"
+      />
+
       <h3>Where is your event?</h3>
-      <div class="field">
-        <label>Location</label>
-        <input
-          v-model="event.location"
-          type="text"
-          placeholder="Add a location"
-        />
-      </div>
+      <BaseInput
+        class="field"
+        label="Location"
+        v-model="event.location"
+        type="text"
+        placeholder="Location"
+      />
       <h3>When is your event?</h3>
       <div class="field">
         <label>Date</label>
@@ -51,6 +51,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import Datepicker from 'vuejs-datepicker'
+import NProgress from 'nprogress'
 
 const numberSequence = length =>
   Array.apply(null, { length }).map(Number.call, Number)
@@ -73,6 +74,7 @@ export default {
     ...mapActions('event', ['createEvent']),
     async submitEvent() {
       try {
+        NProgress.start()
         await this.createEvent(this.event)
         this.$router.push({
           name: 'event-show',
@@ -80,7 +82,7 @@ export default {
         })
         this.event = this.newEventObject()
       } catch (error) {
-        /* do nothing */
+        NProgress.done()
       }
     },
     newEventObject() {
@@ -88,8 +90,9 @@ export default {
 
       return {
         id,
+        user: this.user,
         category: '',
-        organizer: (this.user || {}).name,
+        organizer: this.user,
         title: '',
         description: '',
         location: '',

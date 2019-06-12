@@ -6,7 +6,8 @@ export default {
   state: {
     events: [],
     eventsTotalCount: 0,
-    event: {}
+    event: {},
+    perPage: 3
   },
 
   mutations: {
@@ -44,9 +45,9 @@ export default {
         throw error
       }
     },
-    async fetchEvents({ commit, dispatch }, { perPage, page }) {
+    async fetchEvents({ state, commit, dispatch }, { page }) {
       try {
-        const response = await EventService.getEvents(perPage, page)
+        const response = await EventService.getEvents(state.perPage, page)
         const eventsTotalCount = +response.headers['x-total-count']
         commit('setEventsTotalCount', eventsTotalCount)
         commit('setEvents', response.data)
@@ -58,18 +59,11 @@ export default {
         dispatch('notification/add', notification, { root: true })
       }
     },
-    async fetchEvent({ commit, getters, dispatch }, id) {
-      try {
-        const event =
-          getters.getEventById(id) || (await EventService.getEvent(id).data)
-        commit('setEvent', event)
-      } catch (error) {
-        const notification = {
-          type: 'error',
-          message: `There was a problem fetching event: ${error.message}`
-        }
-        dispatch('notification/add', notification, { root: true })
-      }
+    async fetchEvent({ commit, getters }, id) {
+      const event =
+        getters.getEventById(id) || (await EventService.getEvent(id)).data
+      commit('setEvent', event)
+      return event
     }
   },
 
