@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Create an Event, {{ user.name }}</h1>
-    <form @submit.prevent="createEvent">
+    <form @submit.prevent="submitEvent">
       <label>Select a category</label>
       <select v-model="event.category">
         <option v-for="cat in categories" :key="cat">{{ cat }}</option>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Datepicker from 'vuejs-datepicker'
 
 const numberSequence = length =>
@@ -66,30 +66,30 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getEventById']),
-    ...mapState(['user', 'categories'])
+    ...mapState('user', ['user']),
+    ...mapState(['categories'])
   },
   methods: {
-    async createEvent() {
+    ...mapActions('event', ['createEvent']),
+    async submitEvent() {
       try {
-        await this.$store.dispatch('createEvent', this.event)
+        await this.createEvent(this.event)
         this.$router.push({
           name: 'event-show',
           params: { id: this.event.id }
         })
         this.event = this.newEventObject()
       } catch (error) {
-        console.log('There was a problem creating your event')
+        /* do nothing */
       }
     },
     newEventObject() {
-      const user = this.$store.state.user
       const id = Math.floor(Math.random() * 10000000)
 
       return {
         id,
         category: '',
-        organizer: user,
+        organizer: (this.user || {}).name,
         title: '',
         description: '',
         location: '',

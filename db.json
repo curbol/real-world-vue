@@ -217,19 +217,13 @@
       ]
     },
     {
-      "id": 10,
-      "category": "animal welfare",
-      "organizer": {
-        "user": {
-          "id": "abc123",
-          "name": "Adam Jahr"
-        }
-      },
-      "title": "Gregg's Event",
-      "description": "We'll do stuff",
-      "location": "Your House",
+      "id": 6589970,
+      "category": "",
+      "title": "asdfasdfasdfa",
+      "description": "",
+      "location": "",
       "date": "",
-      "time": "5:00",
+      "time": "",
       "attendees": []
     }
   ]
