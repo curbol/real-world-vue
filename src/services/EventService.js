@@ -10,10 +10,14 @@ const apiClient = axios.create({
 })
 
 export default {
-  getEvents() {
-    return apiClient.get('/events')
+  getEvents(perPage, page) {
+    const query = perPage && page ? `?_limit=${perPage}&_page=${page}` : ''
+    return apiClient.get(`/events${query}`)
   },
   getEvent(id) {
     return apiClient.get('/events/' + id)
+  },
+  postEvent(event) {
+    return apiClient.post('/events', event)
   }
 }
