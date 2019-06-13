@@ -6,6 +6,7 @@ import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
 import 'nprogress/nprogress.css'
 import Vuelidate from 'vuelidate'
+import DateFilter from '@/filters/date'
 
 const requireComponent = require.context(
   // The relative path of the components folder
@@ -41,6 +42,9 @@ requireComponent.keys().forEach(fileName => {
   )
 })
 
+/* ----------------------------------------------------*/
+
+Vue.filter('date', DateFilter)
 Vue.use(Vuelidate)
 Vue.config.productionTip = false
 
